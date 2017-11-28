@@ -206,7 +206,10 @@ public class MainActivity extends AppCompatActivity {
                 "[0:v] [0:a:0] [1:v] [1:a:0] concat=n=2:v=1:a=1 [v] [a]", "-map", "[v]", "-map", "[a]", video_result}; */
 
 
+
         //para mezclar 2 audios, mp3
+        //Como en
+        //https://stackoverflow.com/questions/31187153/merging-two-mp3-audio-files-using-ffmpeg
         //String res = "-y -i " + a.getAbsolutePath() + " -i " + b.getAbsolutePath()
         // + " -filter_complex '[0:0][1:0] amix=inputs=2:duration=longest' -c:a libmp3lame " + c.getAbsolutePath();
         String[] cmd = {"-y", "-i", audio_1, "-i", audio_2, "-filter_complex",
