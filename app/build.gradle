@@ -18,14 +18,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
+    //Tuve que poner esto para que no me diera error
+    //Como en:
+    //https://stackoverflow.com/questions/28999124/resolved-versions-for-app-22-0-0-and-test-app-21-0-3-differ
+    configurations.all {
+        resolutionStrategy {
+            force 'com.android.support:support-annotations:23.1.1'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:26.1.0'
+    //compile 'com.android.support:appcompat-v7:26.0.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:26.1.0'
+    //La version de support design debe ser igual a buildToolsVersion arriba
+    //compile 'com.android.support:design:26.0.2'
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:1.0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    compile(name:'FFmpegAndroid-0.3.2', ext:'aar')
+
+
 }
