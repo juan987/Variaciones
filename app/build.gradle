@@ -48,6 +48,10 @@ dependencies {
     androidTestCompile 'com.android.support.test:runner:1.0.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:3.0.1'
 
+
+
+    //Como en:
+    //http://writingminds.github.io/ffmpeg-android-java/
     compile(name:'FFmpegAndroid-0.3.2', ext:'aar')
 
 
