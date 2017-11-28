@@ -2,6 +2,7 @@ package com.juan.variaciones;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -116,15 +117,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ejecutar(){
-        prueba_1_ffmpeg();
+        //prueba_1_ffmpeg();
+        concat_two_videos_ffmpeg();
     }
 
     private void prueba_1_ffmpeg(){
+        //Este metodo es solo para obtener la version
         FFmpeg ffmpeg = FFmpeg.getInstance(this);
         try {
             // to execute "ffmpeg -version" command you just need to pass "-version"
 
-            String[] cmd = new String[4];
+            String[] cmd = new String[1];
             cmd[0] ="-version";
 
             ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
@@ -164,5 +167,89 @@ public class MainActivity extends AppCompatActivity {
             Log.d(xxx, "en prueba_1_ffmpeg, FFmpegCommandAlreadyRunningException: " +e.getMessage());
 
         }
-    }
+    }//FIN de prueba_1_ffmpeg
+
+
+    private void concat_two_videos_ffmpeg(){
+        //Para los path de los ficheros, como en:
+        //http://oocms.org/question/2514896/how-to-mix-overlay-two-mp3-audio-file-into-one-mp3-file-not-concatenate
+        //Este metodo para concatenar 2 videos
+
+
+        String video_1 = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"video1.mp4";
+        String video_2 = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"video2.mp4";
+        String video_result = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"videoresult.mp4";
+        String audio_result = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"sound_test.mp3";
+
+
+
+
+
+        //ffmpeg.execute("-y -i /storagepath/yourvideo.mp4 /storagepath/testoutput.mp3"
+        String stringComando = " -y -i " +video_1 +" " +audio_result;
+
+        /*  este funciona
+        String[] cmd = new String[4];
+        cmd[0] = "-y";
+        cmd[1] = "-i";
+        cmd[2] = video_1;
+        cmd[3] = audio_result;  */
+
+
+
+        //para concatenar dos videos, funciona
+        //como en
+        //https://github.com/bgrins/videoconverter.js/issues/18
+
+        String[] cmd = {"-i", video_1, "-i", video_2, "-v", "debug", "-strict", "-2", "-filter_complex",
+                "[0:v] [0:a:0] [1:v] [1:a:0] concat=n=2:v=1:a=1 [v] [a]", "-map", "[v]", "-map", "[a]", video_result};
+
+
+
+
+        FFmpeg ffmpeg = FFmpeg.getInstance(this);
+        try {
+            // to execute "ffmpeg -version" command you just need to pass "-version"
+
+            //String[] cmd = new String[1];
+            //cmd[0] = stringComando;
+
+            ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    Log.d(xxx, "en concat_two_videos_ffmpeg, ffmpeg.execute, onStart" );
+
+                }
+
+                @Override
+                public void onProgress(String message) {
+                    Log.d(xxx, "en concat_two_videos_ffmpeg, ffmpeg.execute, onProgress: " +message);
+
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Log.d(xxx, "en concat_two_videos_ffmpeg, ffmpeg.execute, onFailure: " +message);
+
+                }
+
+                @Override
+                public void onSuccess(String message) {
+                    Log.d(xxx, "en concat_two_videos_ffmpeg, ffmpeg.execute, onSuccess: " +message);
+
+                }
+
+                @Override
+                public void onFinish() {
+                    Log.d(xxx, "en concat_two_videos_ffmpeg, ffmpeg.execute, onFinish" );
+
+                }
+            });
+        } catch (FFmpegCommandAlreadyRunningException e) {
+            // Handle if FFmpeg is already running
+            Log.d(xxx, "en concat_two_videos_ffmpeg, FFmpegCommandAlreadyRunningException: " +e.getMessage());
+
+        }
+    }//FIN de prueba_1_ffmpeg
 }
