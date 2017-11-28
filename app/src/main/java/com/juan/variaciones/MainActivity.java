@@ -181,13 +181,14 @@ public class MainActivity extends AppCompatActivity {
         String video_result = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"videoresult.mp4";
         String audio_result = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"sound_test.mp3";
 
+        String audio_1 = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"ruido.mp3";
+        String audio_2 = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"Intro.mp3";
+        String audio_mezclado = Environment.getExternalStorageDirectory() + "/Variaciones/"  +"audio-mezclado.mp3";
 
 
 
 
-        //ffmpeg.execute("-y -i /storagepath/yourvideo.mp4 /storagepath/testoutput.mp3"
-        String stringComando = " -y -i " +video_1 +" " +audio_result;
-
+        //Obtiene el audio del video mp4
         /*  este funciona
         String[] cmd = new String[4];
         cmd[0] = "-y";
@@ -201,10 +202,17 @@ public class MainActivity extends AppCompatActivity {
         //como en
         //https://github.com/bgrins/videoconverter.js/issues/18
 
-        String[] cmd = {"-i", video_1, "-i", video_2, "-v", "debug", "-strict", "-2", "-filter_complex",
-                "[0:v] [0:a:0] [1:v] [1:a:0] concat=n=2:v=1:a=1 [v] [a]", "-map", "[v]", "-map", "[a]", video_result};
+        /* String[] cmd = {"-i", video_1, "-i", video_2, "-v", "debug", "-strict", "-2", "-filter_complex",
+                "[0:v] [0:a:0] [1:v] [1:a:0] concat=n=2:v=1:a=1 [v] [a]", "-map", "[v]", "-map", "[a]", video_result}; */
 
 
+        //para mezclar 2 audios, mp3
+        //String res = "-y -i " + a.getAbsolutePath() + " -i " + b.getAbsolutePath()
+        // + " -filter_complex '[0:0][1:0] amix=inputs=2:duration=longest' -c:a libmp3lame " + c.getAbsolutePath();
+        String[] cmd = {"-y", "-i", audio_1, "-i", audio_2, "-filter_complex",
+                //"[0:0][1:0] amix=inputs=2:duration=longest", "-c:a", "libmp3lame", audio_mezclado};
+        "[0:0][1:0] amix=inputs=2:duration=shortest", "-c:a", "libmp3lame", audio_mezclado};
+        //Con shortest o longer selecciono que dure el audio mas corto o mas largo
 
 
         FFmpeg ffmpeg = FFmpeg.getInstance(this);
